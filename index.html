@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>muse — where ideas come alive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --muse-purple: #C5B3D7;
+    --muse-purple-deep: #9B82BB;
+    --muse-purple-light: #E8DDEF;
+    --epy-orange: #F3704E;
+    --poly-blue: #9FCEE3;
+    --taly-yellow: #E7E867;
+    --obsidian: #323537;
+    --canvas: #EAEAE8;
+    --white: #FAF9F7;
+    --grain-opacity: 0.035;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    background: var(--white);
+    color: var(--obsidian);
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: var(--grain-opacity);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Typography */
+  .display, h1, h2, h3, .serif {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s ease, padding 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(250,249,247,0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 16px 56px;
+    border-bottom: 1px solid rgba(197,179,215,0.2);
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .nav-logo img.nav-symbol {
+    height: 32px;
+    width: auto;
+    opacity: 0.9;
+  }
+  .nav-logo img.nav-wordmark {
+    height: 22px;
+    width: auto;
+    opacity: 0.9;
+  }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--obsidian);
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-cta {
+    background: var(--obsidian);
+    color: var(--white) !important;
+    opacity: 1 !important;
+    padding: 10px 24px !important;
+    border-radius: 100px;
+    font-size: 12px !important;
+    letter-spacing: 0.08em !important;
+    transition: background 0.3s ease !important;
+  }
+  .nav-cta:hover { background: var(--muse-purple-deep) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(197,179,215,0.25) 0%, rgba(234,234,232,0.1) 50%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float linear infinite;
+    opacity: 0;
+  }
+  @keyframes float {
+    0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-80px) translateX(20px); opacity: 0; }
+  }
+  @keyframes orb-drift {
+    0% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -20px) scale(1.05); }
+    66% { transform: translate(-20px, 15px) scale(0.97); }
+    100% { transform: translate(0, 0) scale(1); }
+  }
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: orb-drift ease-in-out infinite;
+    filter: blur(0px);
+  }
+  .hero-orb-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle at 35% 35%, rgba(197,179,215,0.35) 0%, rgba(197,179,215,0.08) 60%, transparent 100%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation-duration: 12s;
+  }
+  .hero-orb-2 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(159,206,227,0.2) 0%, transparent 70%);
+    top: 20%; right: 15%;
+    animation-duration: 16s;
+    animation-delay: -4s;
+  }
+  .hero-orb-3 {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(243,112,78,0.15) 0%, transparent 70%);
+    bottom: 25%; left: 12%;
+    animation-duration: 14s;
+    animation-delay: -8s;
+  }
+  .hero-orb-4 {
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(231,232,103,0.2) 0%, transparent 70%);
+    bottom: 30%; right: 20%;
+    animation-duration: 18s;
+    animation-delay: -6s;
+  }
+
+  .hero-symbol {
+    width: 96px;
+    height: auto;
+    margin-bottom: 40px;
+    animation: symbol-breathe 6s ease-in-out infinite;
+    opacity: 0;
+    animation-delay: 0.5s;
+    animation-fill-mode: forwards;
+  }
+  @keyframes symbol-breathe {
+    0% { opacity: 0; transform: scale(0.9); }
+    20% { opacity: 0.85; transform: scale(1); }
+    50% { opacity: 0.85; transform: scale(1.04); }
+    80% { opacity: 0.85; transform: scale(1); }
+    100% { opacity: 0.85; transform: scale(1.04); }
+  }
+
+  .hero-wordmark {
+    height: 52px;
+    width: auto;
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fade-up 0.9s ease forwards;
+    animation-delay: 0.8s;
+    filter: brightness(0) saturate(100%) invert(74%) sepia(10%) saturate(400%) hue-rotate(240deg) brightness(95%);
+  }
+
+  @keyframes fade-up {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-headline {
+    font-size: clamp(52px, 8vw, 96px);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--obsidian);
+    max-width: 820px;
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fade-up 1s ease forwards;
+    animation-delay: 1.1s;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--muse-purple-deep);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--obsidian);
+    opacity: 0.6;
+    max-width: 520px;
+    margin-bottom: 52px;
+    animation: fade-up 1s ease forwards;
+    animation-delay: 1.3s;
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fade-up 1s ease forwards;
+    animation-delay: 1.5s;
+  }
+
+  .btn-primary {
+    background: var(--obsidian);
+    color: var(--white);
+    padding: 16px 36px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    transition: transform 0.3s ease, background 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary:hover {
+    background: var(--muse-purple-deep);
+    transform: translateY(-2px);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--obsidian);
+    padding: 16px 36px;
+    border-radius: 100px;
+    border: 1px solid rgba(50,53,55,0.25);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-ghost:hover {
+    border-color: var(--muse-purple);
+    transform: translateY(-2px);
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.4;
+    animation: fade-up 1s ease forwards;
+    animation-delay: 2s;
+    opacity: 0;
+  }
+  .scroll-hint span {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--obsidian), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+  @keyframes scroll-pulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
+    50% { opacity: 0.7; transform: scaleY(1); }
+  }
+
+  /* SECTIONS */
+  section { position: relative; }
+
+  .section-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muse-purple-deep);
+    margin-bottom: 20px;
+    display: block;
+    font-weight: 400;
+  }
+
+  /* ABOUT */
+  .about {
+    padding: 160px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 120px;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .about-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .about-orb {
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(197,179,215,0.4) 0%, rgba(197,179,215,0.12) 50%, transparent 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: orb-drift 10s ease-in-out infinite;
+  }
+  .about-orb img {
+    width: 140px;
+    height: auto;
+    opacity: 0.7;
+    animation: orb-drift 14s ease-in-out infinite reverse;
+  }
+  .about-text h2 {
+    font-size: clamp(40px, 4vw, 58px);
+    margin-bottom: 28px;
+    color: var(--obsidian);
+  }
+  .about-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--obsidian);
+    opacity: 0.65;
+    margin-bottom: 20px;
+  }
+
+  /* COMPANIONS */
+  .companions {
+    padding: 120px 80px;
+    background: var(--obsidian);
+    position: relative;
+    overflow: hidden;
+  }
+  .companions::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 0%, rgba(197,179,215,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .companions-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .companions-header .section-label {
+    color: rgba(197,179,215,0.6);
+  }
+  .companions-header h2 {
+    font-size: clamp(40px, 5vw, 64px);
+    color: var(--canvas);
+  }
+  .companions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .companion-card {
+    border-radius: 28px;
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s ease;
+    cursor: default;
+  }
+  .companion-card:hover {
+    transform: translateY(-8px);
+  }
+  .companion-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    opacity: 0.06;
+    border-radius: inherit;
+  }
+  .card-epy {
+    background: rgba(243,112,78,0.08);
+    border: 1px solid rgba(243,112,78,0.2);
+  }
+  .card-poly {
+    background: rgba(159,206,227,0.08);
+    border: 1px solid rgba(159,206,227,0.2);
+  }
+  .card-taly {
+    background: rgba(231,232,103,0.08);
+    border: 1px solid rgba(231,232,103,0.2);
+  }
+  .card-orb {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: orb-drift 8s ease-in-out infinite;
+  }
+  .card-orb-epy { background: radial-gradient(circle at 35% 35%, rgba(243,112,78,0.6), rgba(243,112,78,0.15)); }
+  .card-orb-poly { background: radial-gradient(circle at 35% 35%, rgba(159,206,227,0.6), rgba(159,206,227,0.15)); animation-delay: -3s; }
+  .card-orb-taly { background: radial-gradient(circle at 35% 35%, rgba(231,232,103,0.6), rgba(231,232,103,0.15)); animation-delay: -6s; }
+
+  .card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 15px;
+  }
+  .card-name-epy { color: #F3704E; }
+  .card-name-poly { color: #9FCEE3; }
+  .card-name-taly { color: #E7E867; }
+
+  .card-subtitle {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(234,234,232,0.4);
+    margin-bottom: 28px;
+    font-weight: 400;
+  }
+  .card-desc {
+    font-size: 15px;
+    line-height: 1.75;
+    color: rgba(234,234,232,0.65);
+    margin-bottom: 28px;
+  }
+  .card-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: rgba(234,234,232,0.4);
+  }
+
+  /* WHY MUSE */
+  .why {
+    padding: 160px 80px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .why-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .why-header h2 {
+    font-size: clamp(40px, 5vw, 64px);
+    color: var(--obsidian);
+  }
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+  .why-card {
+    padding: 48px 44px;
+    border-radius: 24px;
+    background: var(--canvas);
+    border: 1px solid rgba(197,179,215,0.3);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .why-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 48px rgba(197,179,215,0.15);
+  }
+  .why-card::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(197,179,215,0.2), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .why-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: rgba(197,179,215,0.3);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .why-card h3 {
+    font-size: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    color: var(--obsidian);
+    margin-bottom: 14px;
+  }
+  .why-card p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--obsidian);
+    opacity: 0.6;
+  }
+
+  /* NAMES STORY */
+  .names-story {
+    padding: 120px 80px;
+    background: linear-gradient(180deg, var(--muse-purple-light) 0%, var(--canvas) 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .names-story::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(197,179,215,0.3), transparent 70%);
+    pointer-events: none;
+  }
+  .names-story h2 {
+    font-size: clamp(40px, 5vw, 64px);
+    max-width: 800px;
+    margin: 0 auto 28px;
+    color: var(--obsidian);
+  }
+  .names-story p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--obsidian);
+    opacity: 0.65;
+    max-width: 680px;
+    margin: 0 auto 16px;
+  }
+  .names-pills {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 52px;
+    flex-wrap: wrap;
+  }
+  .name-pill {
+    padding: 16px 36px;
+    border-radius: 100px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    border: 1px solid currentColor;
+    transition: transform 0.3s ease, background 0.3s ease;
+    cursor: default;
+  }
+  .name-pill:hover { transform: scale(1.04); }
+  .pill-epy { color: #F3704E; border-color: rgba(243,112,78,0.35); }
+  .pill-epy:hover { background: rgba(243,112,78,0.06); }
+  .pill-poly { color: #9FCEE3; border-color: rgba(159,206,227,0.35); }
+  .pill-poly:hover { background: rgba(159,206,227,0.06); }
+  .pill-taly { color: #E7E867; border-color: rgba(231,232,103,0.35); }
+  .pill-taly:hover { background: rgba(231,232,103,0.06); }
+
+  /* APP SECTION */
+  .app-section {
+    padding: 160px 80px;
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 100px;
+    align-items: center;
+  }
+  .app-text .section-label { color: var(--muse-purple-deep); }
+  .app-text h2 {
+    font-size: clamp(40px, 4vw, 58px);
+    color: var(--obsidian);
+    margin-bottom: 24px;
+  }
+  .app-text p {
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--obsidian);
+    opacity: 0.6;
+    margin-bottom: 48px;
+  }
+  .store-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .store-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    border-radius: 16px;
+    background: var(--obsidian);
+    color: var(--white);
+    text-decoration: none;
+    transition: transform 0.3s ease, background 0.3s ease;
+    min-width: 170px;
+  }
+  .store-btn:hover {
+    transform: translateY(-3px);
+    background: var(--muse-purple-deep);
+  }
+  .store-btn-icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+  .store-btn-text {
+    display: flex;
+    flex-direction: column;
+  }
+  .store-btn-text small {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    opacity: 0.7;
+    font-weight: 400;
+  }
+  .store-btn-text strong {
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  /* App mockup */
+  .app-mockup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .phone-frame {
+    width: 260px;
+    height: 520px;
+    background: var(--obsidian);
+    border-radius: 44px;
+    padding: 16px;
+    box-shadow: 0 60px 120px rgba(50,53,55,0.3), 0 0 0 1px rgba(197,179,215,0.15);
+    position: relative;
+    z-index: 2;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, #1a1b1d 0%, #0f1011 100%);
+    border-radius: 32px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+  }
+  .phone-symbol {
+    width: 56px;
+    height: auto;
+    opacity: 0.8;
+    animation: orb-drift 8s ease-in-out infinite;
+  }
+  .phone-wordmark {
+    width: 80px;
+    height: auto;
+    opacity: 0.7;
+    filter: brightness(0) invert(1);
+  }
+  .phone-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 13px;
+    color: rgba(197,179,215,0.6);
+    text-align: center;
+  }
+  .phone-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 20px;
+  }
+  .phone-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(197,179,215,0.3);
+  }
+  .phone-dot.active { background: var(--muse-purple); }
+
+  .phone-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(197,179,215,0.2), transparent 70%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    animation: orb-drift 10s ease-in-out infinite;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--obsidian);
+    padding: 80px 80px 48px;
+    color: var(--canvas);
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 60px;
+    padding-bottom: 60px;
+    border-bottom: 1px solid rgba(234,234,232,0.1);
+    margin-bottom: 40px;
+  }
+  .footer-brand img.f-symbol {
+    height: 40px;
+    width: auto;
+    margin-bottom: 16px;
+    opacity: 0.6;
+    display: block;
+  }
+  .footer-brand img.f-wordmark {
+    height: 24px;
+    width: auto;
+    margin-bottom: 20px;
+    opacity: 0.5;
+    display: block;
+    filter: brightness(10);
+  }
+  .footer-brand p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: rgba(234,234,232,0.4);
+    line-height: 1.6;
+  }
+  .footer-col h4 {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(234,234,232,0.35);
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 12px; }
+  .footer-col ul a {
+    text-decoration: none;
+    color: rgba(234,234,232,0.55);
+    font-size: 14px;
+    font-weight: 300;
+    transition: color 0.2s;
+  }
+  .footer-col ul a:hover { color: var(--canvas); }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer-bottom p {
+    font-size: 12px;
+    color: rgba(234,234,232,0.3);
+    font-weight: 300;
+  }
+  .footer-bottom a {
+    font-size: 12px;
+    color: rgba(234,234,232,0.3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-bottom a:hover { color: var(--canvas); }
+
+  /* SCROLL ANIMATIONS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* DIVIDER */
+  .section-divider {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, var(--muse-purple), transparent);
+    margin: 0 auto;
+    opacity: 0.4;
+  }
+
+
+  /* ============================================
+     RESPONSIVE — MOBILE FIRST IMPROVEMENTS
+     ============================================ */
+
+  /* Hamburger menu */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    background: none;
+    border: none;
+    z-index: 200;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--obsidian);
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* Mobile nav drawer */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(250,249,247,0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 150;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .mobile-nav.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .mobile-nav a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--obsidian);
+    text-decoration: none;
+    padding: 12px 0;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+    letter-spacing: -0.01em;
+  }
+  .mobile-nav a:hover { opacity: 1; color: var(--muse-purple-deep); }
+  .mobile-nav .mobile-cta {
+    margin-top: 32px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    background: var(--obsidian);
+    color: var(--white) !important;
+    opacity: 1 !important;
+    padding: 14px 40px;
+    border-radius: 100px;
+  }
+
+  @media (max-width: 768px) {
+    /* Show hamburger, hide desktop nav links */
+    .hamburger { display: flex; }
+    .nav-links { display: none !important; }
+    nav { padding: 18px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-logo img.nav-symbol { height: 26px; }
+    .nav-logo img.nav-wordmark { height: 18px; }
+    .mobile-nav { display: flex; }
+
+    /* Hero */
+    .hero { padding: 110px 24px 80px; min-height: 100svh; }
+    .hero-symbol { width: 72px; margin-bottom: 28px; }
+    .hero-wordmark { height: 38px; margin-bottom: 36px; }
+    .hero-headline { font-size: clamp(42px, 11vw, 64px); margin-bottom: 20px; }
+    .hero-sub { font-size: 15px; margin-bottom: 40px; }
+    .hero-buttons { flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+    .btn-primary, .btn-ghost { width: 100%; max-width: 280px; justify-content: center; padding: 16px 28px; }
+    .hero-orb-1 { width: 340px; height: 340px; }
+    .hero-orb-2 { width: 180px; height: 180px; top: 10%; right: -40px; }
+    .hero-orb-3 { width: 120px; height: 120px; bottom: 20%; left: -20px; }
+    .hero-orb-4 { width: 100px; height: 100px; }
+    .scroll-hint { display: none; }
+
+    /* About */
+    .about {
+      grid-template-columns: 1fr;
+      gap: 48px;
+      padding: 80px 24px;
+    }
+    .about-visual { order: -1; }
+    .about-orb { width: 260px; height: 260px; }
+    .about-orb img { width: 90px; }
+    .about-text h2 { font-size: clamp(36px, 9vw, 52px); }
+    .about-text p { font-size: 15px; }
+
+    /* Companions */
+    .companions { padding: 80px 20px; }
+    .companions-header h2 { font-size: clamp(36px, 9vw, 52px); }
+    .companions-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .companion-card { padding: 36px 28px; border-radius: 24px; }
+    .card-orb { width: 56px; height: 56px; margin-bottom: 24px; }
+    .card-name { font-size: 40px; }
+    .card-desc { font-size: 14px; }
+
+    /* Why Muse */
+    .why { padding: 80px 24px; }
+    .why-header h2 { font-size: clamp(36px, 9vw, 52px); }
+    .why-grid { grid-template-columns: 1fr; gap: 16px; }
+    .why-card { padding: 32px 28px; border-radius: 20px; }
+    .why-num { font-size: 48px; margin-bottom: 14px; }
+    .why-card h3 { font-size: 20px; }
+    .why-card p { font-size: 14px; }
+
+    /* Names story */
+    .names-story { padding: 80px 24px; }
+    .names-story h2 { font-size: clamp(36px, 9vw, 52px); }
+    .names-story p { font-size: 15px; }
+    .names-pills { gap: 12px; margin-top: 36px; }
+    .name-pill { font-size: 22px; padding: 12px 28px; }
+
+    /* App section */
+    .app-section {
+      grid-template-columns: 1fr;
+      gap: 56px;
+      padding: 80px 24px;
+    }
+    .app-text { order: 1; }
+    .app-mockup { order: 0; }
+    .app-text h2 { font-size: clamp(36px, 9vw, 52px); }
+    .app-text p { font-size: 15px; margin-bottom: 36px; }
+    .store-buttons { flex-direction: column; gap: 12px; }
+    .store-btn { width: 100%; max-width: 220px; }
+    .phone-frame { width: 220px; height: 440px; }
+
+    /* Footer */
+    footer { padding: 56px 24px 36px; }
+    .footer-top {
+      grid-template-columns: 1fr;
+      gap: 36px;
+      padding-bottom: 40px;
+      margin-bottom: 28px;
+    }
+    .footer-brand img.f-symbol { height: 32px; }
+    .footer-brand img.f-wordmark { height: 18px; }
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    /* Section divider spacing */
+    .section-divider { height: 56px; }
+  }
+
+  /* Very small screens */
+  @media (max-width: 380px) {
+    .hero-headline { font-size: 38px; }
+    .companion-card { padding: 28px 20px; }
+    .why-card { padding: 28px 20px; }
+    .about-orb { width: 220px; height: 220px; }
+  }
+
+  /* Tablet */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    nav { padding: 20px 40px; }
+    nav.scrolled { padding: 14px 40px; }
+    .about { padding: 100px 48px; gap: 60px; }
+    .companions { padding: 100px 40px; }
+    .companions-grid { grid-template-columns: 1fr; gap: 20px; max-width: 600px; }
+    .why { padding: 100px 48px; }
+    .why-grid { grid-template-columns: 1fr 1fr; }
+    .names-story { padding: 100px 48px; }
+    .app-section { padding: 100px 48px; gap: 60px; }
+    footer { padding: 70px 48px 44px; }
+    .footer-top { grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <img class="nav-symbol" src="symbool.png" alt="Muse symbol">
+    <img class="nav-wordmark" src="woordmerk.png" alt="Muse symbol">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#companions">Companions</a></li>
+    <li><a href="#app">App</a></li>
+    <li><a href="#app" class="nav-cta">Download</a></li>
+  </ul>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile navigation overlay -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#about" class="mobile-link">about</a>
+  <a href="#companions" class="mobile-link">companions</a>
+  <a href="#app" class="mobile-link">app</a>
+  <a href="#app" class="mobile-cta mobile-link">download</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-orb hero-orb-4"></div>
+
+  <img class="hero-symbol" src="symbool.png" alt="Muse">
+  <img class="hero-symbol" src="woordmerk.png"alt="muse">
+
+  <h1 class="hero-headline">Where <em>ideas</em><br>come alive</h1>
+  <p class="hero-sub">Muse creates intelligent AI companions that inspire, support and guide creative makers throughout their artistic journey.</p>
+  <div class="hero-buttons">
+    <a href="#companions" class="btn-primary">Discover Muse</a>
+    <a href="#app" class="btn-ghost">Download App</a>
+  </div>
+
+  
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about">
+    <div class="about-visual reveal">
+      <div class="about-orb">
+        <img src="symbool.png" alt="Muse orb">
+      </div>
+    </div>
+    <div class="about-text">
+      <span class="section-label reveal">About Muse</span>
+      <h2 class="reveal reveal-delay-1">Inspired by the<br><em>nine Muses</em></h2>
+      <p class="reveal reveal-delay-2">In ancient Greece, artists and poets called upon the Muses before creating — nine goddesses of art, science and inspiration who guided human creativity.</p>
+      <p class="reveal reveal-delay-3">Today, Muse reimagines that idea through intelligent AI companions that help musicians, artists and performers grow their craft — not by replacing the human, but by being a quiet, intuitive presence that moves with the creative process.</p>
+      <p class="reveal reveal-delay-4">Not a cold tool. A companion that lives in your creative space.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- COMPANIONS -->
+<section id="companions" class="companions">
+  <div class="companions-header reveal">
+    <span class="section-label">Meet the companions</span>
+    <h2>Three companions.<br><em>One creative world.</em></h2>
+  </div>
+  <div class="companions-grid">
+    <!-- EPY -->
+    <div class="companion-card card-epy reveal">
+      <div class="card-orb card-orb-epy"></div>
+      <div class="card-name card-name-epy">epy</div>
+      <div class="card-subtitle">Music Companion</div>
+      <p class="card-desc">An intelligent AI companion for musicians that provides rhythm guidance, harmonic assistance, creative coaching and immersive performance lighting.</p>
+      <div class="card-tagline">Where music comes alive.</div>
+    </div>
+    <!-- POLY -->
+    <div class="companion-card card-poly reveal reveal-delay-1">
+      <div class="card-orb card-orb-poly"></div>
+      <div class="card-name card-name-poly">poly</div>
+      <div class="card-subtitle">Art Companion</div>
+      <p class="card-desc">An intelligent AI companion for visual artists that supports focus, reflection, presentation and creative flow through adaptive lighting and intelligent guidance.</p>
+      <div class="card-tagline">Where creativity comes alive.</div>
+    </div>
+    <!-- TALY -->
+    <div class="companion-card card-taly reveal reveal-delay-2">
+      <div class="card-orb card-orb-taly"></div>
+      <div class="card-name card-name-taly">taly</div>
+      <div class="card-subtitle">Stage Companion</div>
+      <p class="card-desc">An intelligent AI companion for actors and performers that assists with script practice, vocal coaching and stage support.</p>
+      <div class="card-tagline">Where stories come alive.</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- WHY MUSE -->
+<section>
+  <div class="why">
+    <div class="why-header">
+      <span class="section-label reveal">Why Muse</span>
+      <h2 class="reveal reveal-delay-1">Technology that<br><em>feels human</em></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-num">01</div>
+        <h3>Human-Centered AI</h3>
+        <p>Technology that supports creativity without replacing it. Muse protects the autonomy of the maker, so every creative decision stays yours.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-1">
+        <div class="why-num">02</div>
+        <h3>Creative Flow</h3>
+        <p>Designed to help creators stay immersed in their work. Muse brings calm to the process and makes practice feel natural, almost effortless.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <div class="why-num">03</div>
+        <h3>Intelligent Guidance</h3>
+        <p>Real-time coaching and assistance tailored to every discipline. Subtle feedback and reflection that grows with you.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-3">
+        <div class="why-num">04</div>
+        <h3>Physical Presence</h3>
+        <p>A floating companion that exists within your creative space — not on a screen, but beside you, in the room where ideas come alive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAMES STORY -->
+<section class="names-story">
+  <span class="section-label reveal">The story behind the names</span>
+  <h2 class="reveal reveal-delay-1">Nine muses.<br><em>Endless inspiration.</em></h2>
+  <p class="reveal reveal-delay-2">The name Muse comes from the nine Muses of Greek mythology — the goddesses of art, science and inspiration. Each companion carries a name that connects it to its artistic discipline.</p>
+  <p class="reveal reveal-delay-3"><em>Epy</em> is inspired by Euterpe, muse of music. <em>Poly</em> by Polyhymnia, muse of reflection and expression. <em>Taly</em> by Thalia, muse of performance and life.</p>
+  <div class="names-pills">
+    <div class="name-pill pill-epy reveal">epy</div>
+    <div class="name-pill pill-poly reveal reveal-delay-1">poly</div>
+    <div class="name-pill pill-taly reveal reveal-delay-2">taly</div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- APP SECTION -->
+<section id="app">
+  <div class="app-section">
+    <div class="app-text">
+      <span class="section-label reveal">Download the app</span>
+      <h2 class="reveal reveal-delay-1">Your creative<br><em>companion,</em><br>always with you</h2>
+      <p class="reveal reveal-delay-2">The Muse App allows you to connect your companion, customize settings, receive updates and personalize your creative experience. Available on iOS and Android.</p>
+      <div class="store-buttons reveal reveal-delay-3">
+        <a href="#" class="store-btn">
+          <span class="store-btn-icon">&#xF8FF;</span>
+          <div class="store-btn-text">
+            <small>Download on the</small>
+            <strong>App Store</strong>
+          </div>
+        </a>
+        <a href="#" class="store-btn">
+          <span class="store-btn-icon">&#9654;</span>
+          <div class="store-btn-text">
+            <small>Get it on</small>
+            <strong>Google Play</strong>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="app-mockup reveal reveal-delay-2">
+      <div class="phone-glow"></div>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <img class="phone-symbol" src="symbool.png" alt="Muse">
+          <img class="phone-wordmark" src="woordmerk.png" alt="muse">
+          <p class="phone-tagline">where ideas come alive</p>
+          <div class="phone-dots">
+            <div class="phone-dot active"></div>
+            <div class="phone-dot"></div>
+            <div class="phone-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <img class="f-symbol" src="symbool.png" alt="Muse symbol">
+      <img class="f-wordmark" src="woordmerk.png" alt="muse">
+      <p>where ideas come alive</p>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#companions">Companions</a></li>
+        <li><a href="#app">App</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Companions</h4>
+      <ul>
+        <li><a href="#companions">Epy — Music</a></li>
+        <li><a href="#companions">Poly — Art</a></li>
+        <li><a href="#companions">Taly — Stage</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#">Support</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 Muse. All rights reserved.</p>
+    <a href="#">Privacy Policy</a>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Smooth scroll for all anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href === '#') return;
+      e.preventDefault();
+      const target = document.querySelector(href);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Hamburger menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileNav = document.getElementById('mobileNav');
+  
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileNav.classList.toggle('open');
+    document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+  });
+  
+  // Close mobile nav on link click
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileNav.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+
+  // Touch-friendly: add active states
+  document.querySelectorAll('.companion-card, .why-card').forEach(card => {
+    card.addEventListener('touchstart', () => card.style.transform = 'translateY(-4px)', {passive: true});
+    card.addEventListener('touchend', () => card.style.transform = '', {passive: true});
+  });
+
+</script>
+</body>
+</html>
