@@ -1050,6 +1050,12 @@
     .footer-top { grid-template-columns: 2fr 1fr 1fr; gap: 40px; }
   }
 
+
+  /* Companion cards as links */
+  a.companion-card { cursor: pointer; }
+  a.companion-card:hover .card-arrow { opacity: 1 !important; }
+  .name-pill { cursor: pointer; }
+
 </style>
 </head>
 <body>
@@ -1057,12 +1063,14 @@
 <!-- NAV -->
 <nav id="nav">
   <a href="#" class="nav-logo">
-    <img class="nav-symbol" src="symbool.png" alt="Muse symbol">
-    <img class="nav-wordmark" src="woordmerk.png" alt="Muse symbol">
+    <img class="nav-symbol" src="symbol.png" alt="Muse symbol">
+    <img class="nav-wordmark" src="muse.png" alt="Muse symbol">
   </a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
-    <li><a href="#companions">Companions</a></li>
+    <li><a href="epy.html" style="color:#F3704E;opacity:1;">epy</a></li>
+    <li><a href="poly.html" style="color:#9FCEE3;opacity:1;">poly</a></li>
+    <li><a href="taly.html" style="color:#E7E867;opacity:1;">taly</a></li>
     <li><a href="#app">App</a></li>
     <li><a href="#app" class="nav-cta">Download</a></li>
   </ul>
@@ -1074,7 +1082,9 @@
 <!-- Mobile navigation overlay -->
 <div class="mobile-nav" id="mobileNav">
   <a href="#about" class="mobile-link">about</a>
-  <a href="#companions" class="mobile-link">companions</a>
+  <a href="epy.html" class="mobile-link" style="color:#F3704E;">epy</a>
+  <a href="poly.html" class="mobile-link" style="color:#9FCEE3;">poly</a>
+  <a href="taly.html" class="mobile-link" style="color:#E7E867;">taly</a>
   <a href="#app" class="mobile-link">app</a>
   <a href="#app" class="mobile-cta mobile-link">download</a>
 </div>
@@ -1087,8 +1097,8 @@
   <div class="hero-orb hero-orb-3"></div>
   <div class="hero-orb hero-orb-4"></div>
 
-  <img class="hero-symbol" src="symbool.png" alt="Muse">
-  <img class="hero-symbol" src="woordmerk.png"alt="muse">
+  <img class="hero-symbol" src="symbol.png" alt="Muse">
+  <img class="hero-wordmark" src="muse.png" alt="muse">
 
   <h1 class="hero-headline">Where <em>ideas</em><br>come alive</h1>
   <p class="hero-sub">Muse creates intelligent AI companions that inspire, support and guide creative makers throughout their artistic journey.</p>
@@ -1107,7 +1117,7 @@
   <div class="about">
     <div class="about-visual reveal">
       <div class="about-orb">
-        <img src="symbool.png" alt="Muse orb">
+        <img src="symbol.png" alt="Muse orb">
       </div>
     </div>
     <div class="about-text">
@@ -1130,29 +1140,32 @@
   </div>
   <div class="companions-grid">
     <!-- EPY -->
-    <div class="companion-card card-epy reveal">
+    <a href="epy.html" class="companion-card card-epy reveal" style="text-decoration:none;display:block;">
       <div class="card-orb card-orb-epy"></div>
       <div class="card-name card-name-epy">epy</div>
       <div class="card-subtitle">Music Companion</div>
       <p class="card-desc">An intelligent AI companion for musicians that provides rhythm guidance, harmonic assistance, creative coaching and immersive performance lighting.</p>
       <div class="card-tagline">Where music comes alive.</div>
-    </div>
+      <div class="card-arrow" style="margin-top:20px;font-size:13px;letter-spacing:0.08em;color:#F3704E;opacity:0.7;">Discover Epy →</div>
+    </a>
     <!-- POLY -->
-    <div class="companion-card card-poly reveal reveal-delay-1">
+    <a href="poly.html" class="companion-card card-poly reveal reveal-delay-1" style="text-decoration:none;display:block;">
       <div class="card-orb card-orb-poly"></div>
       <div class="card-name card-name-poly">poly</div>
       <div class="card-subtitle">Art Companion</div>
       <p class="card-desc">An intelligent AI companion for visual artists that supports focus, reflection, presentation and creative flow through adaptive lighting and intelligent guidance.</p>
       <div class="card-tagline">Where creativity comes alive.</div>
-    </div>
+      <div class="card-arrow" style="margin-top:20px;font-size:13px;letter-spacing:0.08em;color:#9FCEE3;opacity:0.7;">Discover Poly →</div>
+    </a>
     <!-- TALY -->
-    <div class="companion-card card-taly reveal reveal-delay-2">
+    <a href="taly.html" class="companion-card card-taly reveal reveal-delay-2" style="text-decoration:none;display:block;">
       <div class="card-orb card-orb-taly"></div>
       <div class="card-name card-name-taly">taly</div>
       <div class="card-subtitle">Stage Companion</div>
       <p class="card-desc">An intelligent AI companion for actors and performers that assists with script practice, vocal coaching and stage support.</p>
       <div class="card-tagline">Where stories come alive.</div>
-    </div>
+      <div class="card-arrow" style="margin-top:20px;font-size:13px;letter-spacing:0.08em;color:#E7E867;opacity:0.7;">Discover Taly →</div>
+    </a>
   </div>
 </section>
 
@@ -1197,9 +1210,9 @@
   <p class="reveal reveal-delay-2">The name Muse comes from the nine Muses of Greek mythology — the goddesses of art, science and inspiration. Each companion carries a name that connects it to its artistic discipline.</p>
   <p class="reveal reveal-delay-3"><em>Epy</em> is inspired by Euterpe, muse of music. <em>Poly</em> by Polyhymnia, muse of reflection and expression. <em>Taly</em> by Thalia, muse of performance and life.</p>
   <div class="names-pills">
-    <div class="name-pill pill-epy reveal">epy</div>
-    <div class="name-pill pill-poly reveal reveal-delay-1">poly</div>
-    <div class="name-pill pill-taly reveal reveal-delay-2">taly</div>
+    <a href="epy.html" class="name-pill pill-epy reveal" style="text-decoration:none;">epy</a>
+    <a href="poly.html" class="name-pill pill-poly reveal reveal-delay-1" style="text-decoration:none;">poly</a>
+    <a href="taly.html" class="name-pill pill-taly reveal reveal-delay-2" style="text-decoration:none;">taly</a>
   </div>
 </section>
 
@@ -1233,8 +1246,8 @@
       <div class="phone-glow"></div>
       <div class="phone-frame">
         <div class="phone-screen">
-          <img class="phone-symbol" src="symbool.png" alt="Muse">
-          <img class="phone-wordmark" src="woordmerk.png" alt="muse">
+          <img class="phone-symbol" src="symbol.png" alt="Muse">
+          <img class="phone-wordmark" src="muse.png" alt="muse">
           <p class="phone-tagline">where ideas come alive</p>
           <div class="phone-dots">
             <div class="phone-dot active"></div>
@@ -1251,8 +1264,8 @@
 <footer>
   <div class="footer-top">
     <div class="footer-brand">
-      <img class="f-symbol" src="symbool.png" alt="Muse symbol">
-      <img class="f-wordmark" src="woordmerk.png" alt="muse">
+      <img class="f-symbol" src="symbol.png" alt="Muse symbol">
+      <img class="f-wordmark" src="muse.png" alt="muse">
       <p>where ideas come alive</p>
     </div>
     <div class="footer-col">
